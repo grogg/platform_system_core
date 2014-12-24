@@ -412,6 +412,8 @@ on boot
     # Define default initial receive window size in segments.
     setprop net.tcp.default_init_rwnd 60
 
+    start sysinit
+
     class_start core
 
 on nonencrypted
@@ -558,6 +560,10 @@ service drm /system/bin/drmserver
     user drm
     group drm system inet drmrpc
 
+service sysinit /system/bin/logwrapper /system/xbin/busybox run-parts /system/etc/init.d
+    disabled
+    oneshot
+
 service media /system/bin/mediaserver
     class main
     user media
@@ -589,9 +595,8 @@ service installd /system/bin/installd
     class main
     socket installd stream 600 system system
 
-service flash_recovery /system/bin/install-recovery.sh
+service flash_recovery /system/etc/install-recovery.sh
     class main
-    seclabel u:r:install_recovery:s0
     oneshot
 
 service racoon /system/bin/racoon
